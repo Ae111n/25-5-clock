@@ -5,19 +5,19 @@
 
       <div class="adjust-length">
         <h3>Session Length</h3>
-        <button @click=setCounntdown(25)>25m</button>
-        <button @click=setCounntdown(45)>45m</button>
+        <button @click=setCountdown(25)>25m</button>
+        <button @click=setCountdown(45)>45m</button>
 
       </div>
 
       <div class="adjust-length">
         <h3>Break Length</h3>
-        <button @click=setCounntdown(15)>15m</button>
-        <button @click=setCounntdown(5)>5m</button>
+        <button @click=setCountdown(15)>15m</button>
+        <button @click=setCountdown(5)>5m</button>
       </div>
     </div>
 
-    <div id="clock">{{ displayMinutes }}:<h1 v-show="zero">0</h1>{{displaySeconds }}</div>
+    <div id="clock">{{ displayMinutes }}:<h1 v-show="zero">0</h1>{{ displaySeconds }}</div>
 
     <div class="adjust-length">
       <h3>controls</h3>
@@ -36,14 +36,12 @@ export default {
       displayMinutes: 25,
       displaySeconds: '00',
       interval: null,
-    audio : new Audio('https://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3')
-,
-zero:false
+      audio: new Audio('https://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3')
     }
   },
 
   methods: {
-    setCounntdown(x) {
+    setCountdown(x) {
       this.displayMinutes = x,
         this.displaySeconds = '00',
         clearInterval(this.interval);
@@ -54,9 +52,10 @@ zero:false
 
 
       if (this.displayMinutes === 0 && this.displaySeconds === 0) {
+        this.displaySeconds = '00',
+          this.displayMinutes = '00'
         clearInterval(this.interval);
         this.audio.play()
-        return;
       }
 
       if (this.displaySeconds === '00') {
@@ -64,7 +63,7 @@ zero:false
         this.displaySeconds = 59;
       } else {
         this.displaySeconds -= 1;
-        this.zero=false
+        this.zero = false
       }
     },
     startCountdown() {
@@ -81,18 +80,20 @@ zero:false
       this.interval = null;
       this.displayMinutes = 25;
       this.displaySeconds = '00';
- 
     },
-
   }
 }
 </script>
 
 <style>
+* {
+  margin: 0;
+}
+
 #container {
   border: 2px solid black;
-  width: 98vw;
-  height: 98vh;
+  width: 100vw;
+  height: 100vh;
   margin: auto;
   background-color: black;
 }
@@ -142,6 +143,7 @@ button {
   text-align: center;
   color: limegreen;
 }
+
 h3 {
   color: lime;
 }
