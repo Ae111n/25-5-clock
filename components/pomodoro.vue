@@ -1,32 +1,28 @@
 <template>
   <div id="container">
-    <h1>25 + 5 Clock</h1>
-    <div id="controls">
-
+    <div id="set-time">
       <div class="adjust-length">
         <h3>Session Length</h3>
         <button @click=setCountdown(25)>25m</button>
         <button @click=setCountdown(45)>45m</button>
-
       </div>
-
       <div class="adjust-length">
         <h3>Break Length</h3>
         <button @click=setCountdown(15)>15m</button>
         <button @click=setCountdown(5)>5m</button>
       </div>
     </div>
-
-    <div id="clock">{{ displayMinutes }}:<h1 v-show="zero">0</h1>{{ displaySeconds }}</div>
-
-    <div class="adjust-length">
-      <h3>controls</h3>
+    <div id="clock">
+      <span v-show="minutesZero">0{{ displayMinutes }}</span><span v-show="!minutesZero">{{ displayMinutes
+        }}</span>:<span v-show="secondsZero">0{{ displaySeconds }}</span><span v-show="!secondsZero">{{ displaySeconds
+        }}</span>
+    </div>
+    <div id="controls">
       <button @click="startCountdown">start</button>
       <button @click="pauseCountdown">pause</button>
       <button @click="resetCountdown">reset</button>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -36,34 +32,44 @@ export default {
       displayMinutes: 25,
       displaySeconds: '00',
       interval: null,
-      audio: new Audio('https://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3')
+      audio: new Audio('https://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3'),
+      secondsZero: false,
+      minutesZero: false
     }
   },
-
   methods: {
     setCountdown(x) {
       this.displayMinutes = x,
         this.displaySeconds = '00',
-        clearInterval(this.interval);
-      this.interval = null;
-
+        clearInterval(this.interval); this.interval = null;
+      if (x < 10) {
+        this.minutesZero = true
+      } else {
+        this.minutesZero = false
+      }
     },
     updateCountdown() {
-
-
       if (this.displayMinutes === 0 && this.displaySeconds === 0) {
         this.displaySeconds = '00',
           this.displayMinutes = '00'
         clearInterval(this.interval);
         this.audio.play()
-      }
-
-      if (this.displaySeconds === '00') {
-        this.displayMinutes -= 1;
+        this.secondsZero = false;
+        this.minutesZero = false;
+        return
+      } else if (this.displaySeconds === '00' || this.displaySeconds === 0) {
+        this.displayMinutes--;
         this.displaySeconds = 59;
+        this.secondsZero = false;
+        if (this.displayMinutes <= 9 && this.displayMinutes != 0) {
+          this.minutesZero = true;
+        }
+      } else if (this.displaySeconds <= 10 && this.displaySeconds != 0) {
+        this.displaySeconds--
+        this.secondsZero = true;
       } else {
-        this.displaySeconds -= 1;
-        this.zero = false
+        this.secondsZero = false;
+        this.displaySeconds--
       }
     },
     startCountdown() {
@@ -80,6 +86,8 @@ export default {
       this.interval = null;
       this.displayMinutes = 25;
       this.displaySeconds = '00';
+      this.secondsZero = false
+      this.minutesZero = false
     },
   }
 }
@@ -87,7 +95,9 @@ export default {
 
 <style>
 * {
-  margin: 0;
+  margin: auto;
+  font-family: sans-serif;
+  color: rgba(0, 255, 0, 0.752);
 }
 
 #container {
@@ -104,21 +114,42 @@ h1 {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  font-family: sans-serif;
   font-size: 34px;
 }
 
 .adjust-length {
-  width: 210px;
-  height: 140px;
-  margin: auto;
+  width: 240px;
+  height: 100px;
   text-align: center;
   font-size: 20px;
+}
+
+.adjust-length button {
+  width: 45%;
+  height: 60%;
 }
 
 #controls {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  height: 100px;
+  width: 500px;
+}
+
+#controls button {
+  width: 31%;
+  height: 75%;
+  font-size: 26px;
+}
+
+#set-time {
+  display: flex;
+  flex-direction: row;
+  width: 500px;
+  height: 100px;
+  margin-top: 10%;
 }
 
 button {
@@ -127,24 +158,16 @@ button {
   border-radius: 5px;
   font-size: larger;
   background-color: black;
-  color: lime;
-  box-shadow: rgba(9, 255, 0, 0.612) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  box-shadow: rgba(9, 255, 0, 0.612) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+    rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 #clock {
-  min-width: 500px;
-  max-width: 30vw;
-  min-height: 20vh;
-  max-height: 40vh;
-
+  width: 500px;
+  height: 200px;
   margin: auto;
-  margin-top: 30px;
   font-size: 200px;
-  text-align: center;
-  color: limegreen;
-}
-
-h3 {
-  color: lime;
+  line-height: 100%;
 }
 </style>
