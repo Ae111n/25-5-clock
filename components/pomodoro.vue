@@ -12,11 +12,13 @@
         <button @click=setCountdown(5)>5m</button>
       </div>
     </div>
+
     <div id="clock">
       <span v-show="minutesZero">0{{ displayMinutes }}</span><span v-show="!minutesZero">{{ displayMinutes
         }}</span>:<span v-show="secondsZero">0{{ displaySeconds }}</span><span v-show="!secondsZero">{{ displaySeconds
         }}</span>
     </div>
+
     <div id="controls">
       <button @click="startCountdown">start</button>
       <button @click="pauseCountdown">pause</button>
@@ -169,5 +171,37 @@ button {
   margin: auto;
   font-size: 200px;
   line-height: 100%;
+}
+
+@media (max-width: 600px) {
+  #clock {
+    font-size: 100px;
+    width: 250px;
+    height: 100px;
+    margin: auto;
+    line-height: 100%;
+  }
+  #set-time {
+  display: flex;
+  flex-direction: row;
+  width: 250px;
+  height: 50px;
+  margin-top: 10%;
+}
+#controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  height: 50px;
+  width: 250px;
+}
+.adjust-length button {
+  width: 59px;
+  height: 30%;
+}
+.adjust-length {
+  font-size: 14px;
+}
 }
 </style>
